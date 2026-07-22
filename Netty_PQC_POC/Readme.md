@@ -7,6 +7,10 @@ exchange** — `X25519MLKEM768` and `SecP256r1MLKEM768`.
 The two HTTP endpoints exist only to report what the JVM actually negotiated; the interesting part
 is the handshake itself.
 
+> **Write-up:** [Your Post-Quantum TLS Might Not Be Post-Quantum](docs/verifying-post-quantum-tls.md)
+> — how this POC reported ML-KEM as enabled while negotiating classical ECDHE, and the verification
+> ladder that catches it.
+
 ## How it works
 
 | Piece | Role |
