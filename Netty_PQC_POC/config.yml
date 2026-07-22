@@ -1,0 +1,9 @@
+serviceName: dropwizard-pqc-service
+
+server:
+  httpsPort: 8443
+  keyStorePath: server.p12
+  keyStorePassword: changeit
+  keyStoreType: PKCS12
+  supportedProtocols:
+    - TLSv1.3

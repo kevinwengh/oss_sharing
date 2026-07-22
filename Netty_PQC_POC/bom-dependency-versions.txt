@@ -1,0 +1,31 @@
+
+The following version properties are referencing the newest available version:
+  ${bouncycastle.version} ........................................ 1.83
+The following version property updates are available:
+  ${jackson-version} ................................. 2.16.2 -> 2.21.1
+  ${jackson.version} ................................. 2.21.0 -> 2.21.1
+  ${lombok-version} ................................ 1.18.30 -> 1.18.42
+  ${netty.version} ...................... 4.1.118.Final -> 4.2.10.Final
+  ${slf4j-version} ...................... 2.0.12 -> 2.0.17-oracle-00001
+  ${spotless.version} ................................. 2.43.0 -> 3.3.0
+
+
+The following plugin updates are available:
+  maven-shade-plugin ................................. 3.5.3 -> 3.6.2
+
+All plugins have a version specified.
+
+Project requires minimum Maven version for build of: 3.9.5
+Plugins require minimum Maven version of: 3.6.3
+
+No plugins require a newer version of Maven than specified by the pom.
+
+The following dependencies in Dependencies have newer versions:
+  com.fasterxml.jackson.core:jackson-core ............. 2.21.0 -> 2.21.1
+  com.fasterxml.jackson.core:jackson-databind ......... 2.21.0 -> 2.21.1
+  com.fasterxml.jackson.dataformat:jackson-dataformat-yaml ...
+                                                        2.21.0 -> 2.21.1
+  io.netty:netty-all ..................... 4.1.118.Final -> 4.2.10.Final
+  org.projectlombok:lombok .......................... 1.18.30 -> 1.18.42
+  org.slf4j:slf4j-api .................... 2.0.12 -> 2.0.17-oracle-00001
+
