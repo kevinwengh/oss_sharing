@@ -3,7 +3,10 @@
 # Starts the POC server from the shaded jar.
 #
 # Environment:
-#   TLS_GROUPS  comma-separated TLS named groups to offer (default: PQC hybrids + secp256r1)
+#   TLS_GROUPS  comma-separated TLS named groups to offer (default: PQC hybrids + secp256r1).
+#               Keep at least one group the JDK itself recognises, such as secp256r1: Netty's
+#               JdkSslContext initialises a JDK SSLEngine, and JDK 25 does not know the ML-KEM
+#               hybrids, so an ML-KEM-only list aborts start-up.
 #   TLS_DEBUG   set to 1 to enable BCJSSE and JSSE handshake tracing (very verbose)
 #   CONFIG      path to the YAML config (default: ./config.yml)
 

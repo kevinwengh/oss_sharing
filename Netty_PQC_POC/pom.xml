@@ -138,6 +138,18 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven.surefire.version}</version>
+        <configuration>
+          <systemPropertyVariables>
+            <!--
+              Mirrors run.sh so PqcHandshakeTest exercises the server as it is actually deployed.
+              secp256r1 is not optional: Netty's JdkSslContext static initializer builds a JDK
+              SSLEngine, and JDK 25's own JSSE does not recognise the hybrid groups, so a value
+              containing only ML-KEM groups fails with "contains no supported named groups".
+              The test restricts its *client* to the hybrid group to prove ML-KEM is negotiated.
+            -->
+            <jdk.tls.namedGroups>X25519MLKEM768,secp256r1</jdk.tls.namedGroups>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
 
       <plugin>

@@ -36,7 +36,22 @@ falls back to classical ECDHE, and the only evidence is a log line:
 WARNING: 'jdk.tls.namedGroups' contains disabled NamedGroup: X25519MLKEM768
 ```
 
-`PqcTlsSupportTest` asserts the capability directly so this cannot regress unnoticed.
+`PqcHandshakeTest` guards this in the build by driving a real handshake whose client offers the
+hybrid group and nothing else — with the pinning removed it fails with `handshake_failure(40)`
+rather than quietly downgrading. A capability probe is not enough here: asking Bouncy Castle whether
+it can generate ML-KEM keys returns yes even in the broken state, because the failure is in which
+provider BCJSSE's internal helper resolves, not in BC itself.
+
+### One constraint on `jdk.tls.namedGroups`
+
+The value must contain at least one group the **JDK's own** JSSE recognises (`secp256r1` here). Netty's
+`JdkSslContext` static initializer builds a JDK `SSLEngine` to compute defaults, and JDK 25's JSSE
+does not know the ML-KEM hybrid groups, so an ML-KEM-only value aborts start-up with:
+
+```text
+java.lang.IllegalArgumentException: System property jdk.tls.namedGroups(X25519MLKEM768) contains no
+supported named groups
+```
 
 ## Requirements
 
@@ -62,7 +77,7 @@ Produces the runnable uber jar `target/netty-pqc-poc-1.0.0-SNAPSHOT.jar`.
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `TLS_GROUPS` | `SecP256r1MLKEM768,X25519MLKEM768,secp256r1` | Named groups offered in the handshake |
+| `TLS_GROUPS` | `SecP256r1MLKEM768,X25519MLKEM768,secp256r1` | Named groups offered in the handshake (must keep one JDK-recognised group) |
 | `TLS_DEBUG` | `0` | `1` enables BCJSSE + JSSE handshake tracing |
 | `CONFIG` | `./config.yml` | Config file path |
 
@@ -153,5 +168,10 @@ Regenerate them with:
 mvn test
 ```
 
-The handler tests drive a Netty `EmbeddedChannel`, so they exercise the real pipeline without
-binding a socket or performing a handshake.
+- `PqcHandshakeTest` binds the real server on an ephemeral port and completes a TLS 1.3 handshake
+  with a BCJSSE client restricted to `X25519MLKEM768`. It is the build's proof that the PQC key
+  exchange actually happens.
+- The handler tests drive a Netty `EmbeddedChannel`, exercising the real pipeline without binding a
+  socket or performing a handshake.
+
+`verify.sh` covers the same ground from outside the JVM with an independent OpenSSL client.

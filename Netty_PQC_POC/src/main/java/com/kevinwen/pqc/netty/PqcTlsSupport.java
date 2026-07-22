@@ -79,11 +79,13 @@ final class PqcTlsSupport {
 
   /**
    * Checks that Bouncy Castle can actually produce ML-KEM key material, which is the capability the
-   * hybrid named groups are built on.
+   * hybrid named groups are built on. This is a live probe rather than a string match against {@code
+   * jdk.tls.namedGroups}, because requesting a group is not the same as supporting it.
    *
-   * <p>This is deliberately a live capability probe rather than a string match against {@code
-   * jdk.tls.namedGroups}: requesting a group is not the same as being able to negotiate it, and the
-   * difference is silent — see {@link #registerProviders()}.
+   * <p>Note the limit of what this proves: it asks BC directly, so it stays {@code true} even when
+   * BCJSSE is mis-registered and has disabled every ML-KEM group (see {@link #registerProviders()}).
+   * Only a real handshake settles that — {@code PqcHandshakeTest} in the build, {@code verify.sh}
+   * against an external client.
    */
   static boolean isMlKemAvailable() {
     try {

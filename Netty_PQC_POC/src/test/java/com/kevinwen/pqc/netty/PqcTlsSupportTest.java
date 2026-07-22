@@ -23,10 +23,9 @@ class PqcTlsSupportTest {
   }
 
   /**
-   * Guards the reason BCJSSE is pinned to the BC provider: without it, {@code
-   * KeyPairGenerator.getInstance("ML-KEM")} resolves to the JDK's own implementation, Bouncy Castle
-   * quietly disables every ML-KEM named group, and the handshake silently drops back to classical
-   * key exchange.
+   * Checks the underlying primitive is present. This is a necessary but <em>not</em> sufficient
+   * condition for a PQC handshake: it asks BC directly, so it passes even when BCJSSE has disabled
+   * every ML-KEM group. {@link PqcHandshakeTest} is what guards that.
    */
   @Test
   void mlKemKeyGenerationIsAvailableThroughBouncyCastle() {
