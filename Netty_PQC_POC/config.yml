@@ -1,8 +1,12 @@
-serviceName: dropwizard-pqc-service
+# Every key is optional; omitted values fall back to the defaults shown here.
+# Any value may be overridden at start-up with -Dhttps.port / -Dkeystore.path /
+# -Dkeystore.password / -Dkeystore.type.
+serviceName: netty-pqc-service
 
 server:
   httpsPort: 8443
   keyStorePath: server.p12
+  # Demo key material only. See generate-cert.sh.
   keyStorePassword: changeit
   keyStoreType: PKCS12
   supportedProtocols:
